@@ -12,6 +12,9 @@ const app = express();
 const PORT = process.env.PORT;
 connectDb();
 
+//middleware
+app.use(express.json());
+
 app.use("/api/notes", notesRoutes);
 
 app.listen(PORT, () => {
