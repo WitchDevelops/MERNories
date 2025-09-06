@@ -5,8 +5,9 @@ import { Navbar } from "../components/Navbar";
 import { RateLimitedInfo } from "../components/RateLimitedInfo";
 import type { Note } from "../types";
 import { NoteCard } from "../components/NoteCard";
+import { api } from "../lib/axios";
 
-const HomePage = () => {
+export const HomePage = () => {
   const [isRateLimited, setRateLimited] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,9 +16,7 @@ const HomePage = () => {
     const fetchNotes = async () => {
       setLoading(true);
       try {
-        const response = await axios.get<Note[]>(
-          "http://localhost:5001/api/notes"
-        );
+        const response = await api.get<Note[]>("/notes");
         setNotes(response.data);
         setLoading(false);
         setRateLimited(false);
@@ -53,5 +52,3 @@ const HomePage = () => {
     </div>
   );
 };
-
-export default HomePage;
