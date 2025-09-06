@@ -6,7 +6,7 @@ import { RateLimitedInfo } from "../components/RateLimitedInfo";
 import type { Note } from "../types";
 import { NoteCard } from "../components/NoteCard";
 
-const HomePage = () => {
+export const HomePage = () => {
   const [isRateLimited, setRateLimited] = useState(false);
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
@@ -53,5 +53,3 @@ const HomePage = () => {
     </div>
   );
 };
-
-export default HomePage;
