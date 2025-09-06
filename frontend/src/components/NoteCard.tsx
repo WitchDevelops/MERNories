@@ -1,6 +1,7 @@
 import { Link } from "react-router";
-import type { Note } from "../types";
 import { PenSquareIcon, TrashIcon } from "lucide-react";
+import type { Note } from "../types";
+import { formatDate } from "../lib/utils";
 export const NoteCard: React.FC<Note> = ({
   _id,
   title,
@@ -18,12 +19,10 @@ export const NoteCard: React.FC<Note> = ({
         <p className="text-base-content/70 line-clamp-3">{content}</p>
         <div className="card-actions justify-between mt-4">
           <div>
-            <p className="text-sm">
-              created: {new Date(createdAt).toLocaleString()}
-            </p>
+            <p className="text-sm">created: {formatDate(createdAt)}</p>
             {updatedAt !== createdAt && (
               <p className="text-sm text-base-content/70">
-                updated: {new Date(updatedAt).toLocaleString()}
+                updated: {formatDate(updatedAt)}
               </p>
             )}
           </div>
