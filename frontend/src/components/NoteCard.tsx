@@ -1,16 +1,42 @@
+import { Link } from "react-router";
 import type { Note } from "../types";
+import { PenSquareIcon, TrashIcon } from "lucide-react";
 export const NoteCard: React.FC<Note> = ({
+  _id,
   title,
   content,
   createdAt,
   updatedAt,
 }) => {
   return (
-    <div className="border border-base-300 rounded-lg p-4">
-      <p>{title}</p>
-      <p>{content}</p>
-      <p>created: {new Date(createdAt).toLocaleString()}</p>
-      <p>last updated: {new Date(updatedAt).toLocaleString()}</p>
-    </div>
+    <Link
+      to={`/note/${_id}`}
+      className="card bg-base-300 hover:shadow-lg transition-all duration-200 border-t-4 border-solid border-primary"
+    >
+      <div className="card-body">
+        <h2 className="card-title text-base-content">{title}</h2>
+        <p className="text-base-content/70 line-clamp-3">{content}</p>
+        <div className="card-actions justify-between mt-4">
+          <div>
+            <p className="text-sm">
+              created: {new Date(createdAt).toLocaleString()}
+            </p>
+            {updatedAt !== createdAt && (
+              <p className="text-sm text-base-content/70">
+                updated: {new Date(updatedAt).toLocaleString()}
+              </p>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            <button className="btn btn-ghost btn-sm btn-circle hover:bg-primary/10 hover:text-primary">
+              <PenSquareIcon className="size-5 text-base-content/70" />
+            </button>
+            <button className="btn btn-ghost btn-sm btn-circle hover:bg-red-500/10 hover:text-error">
+              <TrashIcon className="size-5 text-base-content/70 hover:text-error" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
