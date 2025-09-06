@@ -1,15 +1,40 @@
-import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import axios from "axios";
+import { ArrowLeftIcon, SaveIcon } from "lucide-react";
+import toast from "react-hot-toast";
+
 export const CreatePage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!title.trim() || !content.trim()) {
+      toast.error("Title and content are required");
+      return;
+    }
     setLoading(true);
-    console.log("Submitting:", { title, content });
+
+    try {
+      await axios.post("http://localhost:5001/api/notes", { title, content });
+      toast.success("Note created successfully");
+      setTitle("");
+      setContent("");
+      navigate(-1);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 429) {
+        toast.error("Rate limit exceeded. Please try again later.");
+        return;
+      } else {
+        toast.error("An error occurred while creating the note.");
+        console.error("Error creating note:", error);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div data-theme="dracula" className="min-h-screen bg-base-200">
@@ -34,7 +59,6 @@ export const CreatePage = () => {
                   placeholder="Note title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  required
                 ></input>
               </div>
               <div className="form-control mb-4">
