@@ -5,8 +5,11 @@ import toast from "react-hot-toast";
 import { api } from "../lib/axios";
 import { LoaderIndicator } from "../components/LoaderIndicator";
 import { ArrowLeftIcon, Loader2Icon, SaveIcon, TrashIcon } from "lucide-react";
+import axios from "axios";
+import { RateLimitedInfo } from "../components/RateLimitedInfo";
 
 export const NoteDetailPage: React.FC<Note> = () => {
+  const [isRateLimited, setRateLimited] = useState(false);
   const [note, setNote] = useState<Note | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -16,12 +19,20 @@ export const NoteDetailPage: React.FC<Note> = () => {
   useEffect(() => {
     const fetchNoteById = async (noteId: string) => {
       try {
-        const res = await api.get(`/notes/${noteId}`);
-        setNote(res.data);
+        const response = await api.get(`/notes/${noteId}`);
+        setNote(response.data);
+        setRateLimited(false);
       } catch (error) {
-        console.error("Error fetching note:", error);
-        toast.error("An error occurred while fetching the note.");
-        setNote(null);
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          toast.error("Rate limit exceeded. Please try again later.");
+          setRateLimited(true);
+          return;
+        } else {
+          toast.error("An error occurred while fetching the note.");
+          console.error("Error fetching note:", error);
+           setNote(null);
+        }
+       
       } finally {
         setLoading(false);
       }
@@ -29,10 +40,6 @@ export const NoteDetailPage: React.FC<Note> = () => {
 
     fetchNoteById(id!);
   }, [id]);
-
-  if (loading) {
-    return <LoaderIndicator />;
-  }
 
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this note?")) {
@@ -64,6 +71,10 @@ export const NoteDetailPage: React.FC<Note> = () => {
     }
   };
 
+  if (loading) {
+    return <LoaderIndicator />;
+  }
+
   return (
     <div data-theme="dracula" className="min-h-screen bg-base-200">
       <div className="max-w-6xl mx-auto p-4 space-y-4">
@@ -81,7 +92,8 @@ export const NoteDetailPage: React.FC<Note> = () => {
             Delete Note
           </button>
         </div>
-        {note ? (
+        {isRateLimited && <RateLimitedInfo />}
+        {note && !isRateLimited ? (
           <div className="card bg-base-100">
             <div className="card-body">
               <div className="form-control mb-4">
@@ -109,7 +121,7 @@ export const NoteDetailPage: React.FC<Note> = () => {
                   }
                 ></textarea>
               </div>
-              <div className="flex justify-end mt-6">
+              <div className="max-xs:form-control flex justify-end mt-6">
                 <button
                   className="btn btn-primary"
                   type="submit"
@@ -131,7 +143,9 @@ export const NoteDetailPage: React.FC<Note> = () => {
             </div>
           </div>
         ) : (
-          <div className="text-center text-base-content/70 py-10">Note not found.</div>
+          <div className="text-center text-base-content/70 py-10">
+            Note not found.
+          </div>
         )}
       </div>
     </div>

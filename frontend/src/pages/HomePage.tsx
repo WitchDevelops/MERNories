@@ -16,11 +16,9 @@ export const HomePage = () => {
 
   useEffect(() => {
     const fetchNotes = async () => {
-      setLoading(true);
       try {
         const response = await api.get<Note[]>("/notes");
         setNotes(response.data);
-        setLoading(false);
         setRateLimited(false);
       } catch (error) {
         console.error("Error fetching notes:", error);
@@ -29,6 +27,8 @@ export const HomePage = () => {
         } else {
           toast.error("An error occurred while fetching notes.");
         }
+      } finally {
+        setLoading(false);
       }
     };
 
