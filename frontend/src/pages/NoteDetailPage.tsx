@@ -8,21 +8,20 @@ import { ArrowLeftIcon, Loader2Icon, SaveIcon, TrashIcon } from "lucide-react";
 
 export const NoteDetailPage: React.FC<Note> = () => {
   const [note, setNote] = useState<Note | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const fetchNoteById = async (noteId: string) => {
-      setLoading(true);
       try {
         const res = await api.get(`/notes/${noteId}`);
         setNote(res.data);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching note:", error);
         toast.error("An error occurred while fetching the note.");
+        setNote(null);
       } finally {
         setLoading(false);
       }
@@ -132,7 +131,7 @@ export const NoteDetailPage: React.FC<Note> = () => {
             </div>
           </div>
         ) : (
-          <div className="text-center text-primary py-10">Note not found.</div>
+          <div className="text-center text-base-content/70 py-10">Note not found.</div>
         )}
       </div>
     </div>
