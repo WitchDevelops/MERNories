@@ -8,7 +8,7 @@ import { ArrowLeftIcon, Loader2Icon, SaveIcon, TrashIcon } from "lucide-react";
 import axios from "axios";
 import { RateLimitedInfo } from "../components/RateLimitedInfo";
 
-export const NoteDetailPage: React.FC<Note> = () => {
+export const NoteDetailPage: React.FC = () => {
   const [isRateLimited, setRateLimited] = useState(false);
   const [note, setNote] = useState<Note | null>(null);
   const [loading, setLoading] = useState(true);
