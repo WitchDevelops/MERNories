@@ -42,7 +42,7 @@ export const CreatePage = () => {
     <div data-theme="dracula" className="min-h-screen bg-base-200">
       <div className="max-w-6xl mx-auto p-4 space-y-4">
         <Link to={"/"} className="btn btn-ghost">
-          <ArrowLeftIcon className="size-5" /> Back to all Notes
+          <ArrowLeftIcon className="size-5" /> Back to Notes
         </Link>
 
         <div className="card bg-base-100 shadow-md">
@@ -87,7 +87,7 @@ export const CreatePage = () => {
                     </p>
                   ) : (
                     <p className="flex items-center">
-                      <SaveIcon className="size-5 mr-2" /> Save
+                      <SaveIcon className="size-5 mr-2" /> Save Note
                     </p>
                   )}
                 </button>
