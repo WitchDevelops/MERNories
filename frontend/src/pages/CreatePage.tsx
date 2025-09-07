@@ -4,6 +4,7 @@ import axios from "axios";
 import { ArrowLeftIcon, SaveIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { api } from "../lib/axios";
+import { Loader2Icon } from "lucide-react";
 
 export const CreatePage = () => {
   const [title, setTitle] = useState("");
@@ -80,7 +81,10 @@ export const CreatePage = () => {
                   disabled={loading}
                 >
                   {loading ? (
-                    "Saving..."
+                    <p className="flex items-center">
+                      <Loader2Icon className="animate-spin size-5 mr-2" />
+                      Saving...
+                    </p>
                   ) : (
                     <p className="flex items-center">
                       <SaveIcon className="size-5 mr-2" /> Save
